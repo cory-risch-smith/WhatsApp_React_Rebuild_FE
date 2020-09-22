@@ -4,9 +4,14 @@ import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import Pusher from "pusher-js";
 import axios from "./axios";
+import { Router } from "@material-ui/icons";
+import { BrowserRouter as Router, Switch, Route } from "";
+import Login from "./Login";
+import { useStateValue } from "./StateProvider";
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [{ user }, dispatch] = useStateValue();
 
   useEffect(() => {
     axios.get("messages/sync").then((response) => {
@@ -34,11 +39,24 @@ function App() {
 
   return (
     <div className="app">
-      <div className="app__body">
-        <Sidebar />
+      {!user ? (
+        <Login />
+      ) : (
+        <div className="app__body">
+          <Router>
+            <Sidebar />
+            <Switch>
+              <Route path="/rooms/:roomId">
+                <Chat messages={messages} />
+              </Route>
 
-        <Chat messages={messages} />
-      </div>
+              <Route path="/">
+                <Chat messages={messages} />
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      )}
     </div>
   );
 }
