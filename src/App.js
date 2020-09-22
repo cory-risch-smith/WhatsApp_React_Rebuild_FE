@@ -4,15 +4,14 @@ import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import Pusher from "pusher-js";
 import axios from "./axios";
-import { Router } from "@material-ui/icons";
-import { BrowserRouter as Router, Switch, Route } from "";
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./Login";
 import { useStateValue } from "./StateProvider";
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [{ user }, dispatch] = useStateValue();
-
   useEffect(() => {
     axios.get("messages/sync").then((response) => {
       setMessages(response.data);
